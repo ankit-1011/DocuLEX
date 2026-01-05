@@ -3,7 +3,7 @@ import Logo from '../assets/Logo.png'
 const Navbar = () => {
     return (
         <div className="w-[280] h-30 bg-black flex justify-center items-center ">
-            <div className="flex items-center text-white font-semibold w-[70%] h-16 border border-gray-600 p-4 rounded-4xl gap-43">
+            <div className="flex items-center text-white font-semibold w-[69%] h-16 border border-gray-600 p-4 rounded-4xl gap-40">
                 <div className="w-18  p-4 flex mr-8  items-center">
                     <img src={Logo} alt="logo" />
                     <h2 className='font-bold text-3xl italic'>DocuLEX</h2>
@@ -13,7 +13,7 @@ const Navbar = () => {
                     <a href="#" className="relative overflow-hidden h-6 group">
                         <span className="block group-hover:-translate-y-full transition-transform duration-300">Home</span>
                         <span
-                            className="block absolute top-full left-0 group-hover:translate-y-[-100%] transition-transform duration-300">Home</span>
+                            className="block absolute top-full left-0 group-hover:translate-y-[-100%] transition-transform duration-300 hover:text-[#A3E635]">Home</span>
                     </a>
                     <a href="#" className="relative overflow-hidden h-6 group">
                         <span className="block group-hover:-translate-y-full transition-transform duration-300">Integrations</span>
