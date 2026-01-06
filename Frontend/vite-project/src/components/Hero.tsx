@@ -1,7 +1,9 @@
+import '../index.css'
+
 const Hero = () => {
     return (
         <div className="flex justify-center items-center flex-col gap-8 m-8">
-            <div className="border  rounded-2xl px-6 py-3 bg-pink-500 h-8 w-66 flex justify-center items-center">
+            <div className="border bg-[#AC60C1] rounded-2xl  h-8 w-66 flex justify-center items-center">
                 <p className=" font-medium p-2">✨ $7.5 million seed round raised</p>
             </div>
             <div className="text-6xl md:text-8xl font-base text-center leading-tight">
@@ -19,11 +21,10 @@ const Hero = () => {
                 Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum sequi vitae, vero eos odit ipsam ullam non delectus autem dicta!
             </div>
 
-            <input
-                className="w-96 rounded-3xl border-2 border-gray-900 shadow-sm hover:shadow-md transition-shadow duration-300 h-14 "
-                placeholder="Enter Your Wallet Address"
-                type="text"
-            />
+            <form className="flex h-12 w-full max-w-md items-center gap-2 overflow-hidden rounded-full border border-gray-500/30 bg-white">
+                <input type="email" placeholder="Enter Your Wallet Address" className=" h-full bg-transparent w-full pl-6 text-sm placeholder-gray-500 text-black outline-none" required />
+                <button type="submit" className="mr-1 h-10 w-56 rounded-full bg-[#A3E635] text-sm text-black transition active:scale-95">Join us</button>
+            </form>
 
         </div>
     )

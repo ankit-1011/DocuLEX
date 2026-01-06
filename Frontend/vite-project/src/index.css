@@ -1,5 +1,5 @@
 @import "tailwindcss";
 
-.to-pink-400 {
+@theme{
     --tw-gradient-to: #f472b6 var(--tw-gradient-to-position);
 }
