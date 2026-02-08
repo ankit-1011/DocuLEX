@@ -2,29 +2,31 @@ import '../index.css'
 
 const Hero = () => {
     return (
-        <div className="flex justify-center items-center flex-col gap-8 m-8">
-            <div className="border bg-[#AC60C1] rounded-2xl  h-8 w-66 flex justify-center items-center">
-                <p className=" font-medium p-2">✨ $7.5 million seed round raised</p>
-            </div>
-            <div className="text-6xl md:text-8xl font-base text-center leading-tight">
-                Impactful design,<br /><span className="relative inline-block">
-                    <span className="text-white">created effortlessly</span>
-
+        <div className="flex justify-center items-center flex-col gap-8 m-8 ">
+          
+            <div className="text-8xl font-[550] text-center ">
+                Embed the<br /><span className="relative inline-block">
+                    <span className="text-white">Blockchain, Anywhere</span>
                     <span className="absolute inset-0 text-gray-400 overflow-hidden"
                         style={{ clipPath: 'inset(50% 0 0 0)' }}>
-                        created effortlessly
+                        Blockchain, Anywhere
                     </span>
                 </span>
-
             </div>
-            <div className="text-xl md:text-2xl text-gray-500 text-center max-w-3xl leading-relaxed">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum sequi vitae, vero eos odit ipsam ullam non delectus autem dicta!
+            <div className="text-3xl text-gray-300  text-center max-w-3xl">
+            Transparent disputes, immutable records, and trustless enforcement — bringing justice onchain.
             </div>
-
-            <form className="flex h-12 w-full max-w-md items-center gap-2 overflow-hidden rounded-full border border-gray-500/30 bg-white">
-                <input type="email" placeholder="Enter Your Wallet Address" className=" h-full bg-transparent w-full pl-6 text-sm placeholder-gray-500 text-black outline-none" required />
-                <button type="submit" className="mr-1 h-10 w-56 rounded-full bg-[#A3E635] text-sm text-black transition active:scale-95">Join us</button>
-            </form>
+              
+              <div className="flex gap-3 mt-4 translate-x-4">
+                <button className=" text-[#35e64d] border border-green-500 text-3xl p-2 rounded-xl">Success<i className="text-medium ">✓</i></button>
+                <button className="border border-white text-white  text-3xl rounded-xl p-2">Onchain</button>
+                 <button className=" border border-white text-white  text-3xl rounded-xl p-2">ZK Proof</button>
+                <button className="border border-white text-white    text-3xl rounded-xl p-2">DAOs</button>
+                 <button className=" text-[#35e64d] border border-green-500 text-3xl rounded-xl p-2">Success<i className="text-medium p-1">✓</i></button>
+                <button className="border border-white text-white    text-3xl rounded-xl p-2">Onchain</button>
+                 <button className=" border border-white text-white    text-3xl rounded-xl p-2">NFTs</button>
+                <button className="border border-white text-white    text-3xl rounded-xl p-2">Temper Proofs</button>
+              </div>
 
         </div>
     )
