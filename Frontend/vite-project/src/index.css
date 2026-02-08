@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+
 @theme{
     --tw-gradient-to: #f472b6 var(--tw-gradient-to-position);
 }

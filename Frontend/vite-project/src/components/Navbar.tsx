@@ -3,7 +3,7 @@ import Logo from '../assets/Logo.png'
 const Navbar = () => {
     return (
         <div className="w-[280] h-30 bg-black flex justify-center items-center bg-gradient-to-b from-gray-800 to-transparent mb-12">
-            <div className="flex items-center text-white font-semibold w-[69%] h-16 border border-gray-600 p-4 rounded-4xl gap-40">
+            <div className="flex items-center text-white font-semibold w-[75%] h-18 border border-gray-600 p-4 rounded-4xl gap-40">
                 <div className="w-18  p-4 flex mr-8  items-center">
                     <img src={Logo} alt="logo" />
                     <h2 className='font-bold text-3xl italic'>DocuLEX</h2>

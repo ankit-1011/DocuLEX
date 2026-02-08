@@ -4,16 +4,16 @@ const Know_More = () => {
     return (
         <div className="min-h-screen bg-white py-12">
             <div className="text-6xl font-medium flex justify-center pt-20 px-46 text-black">
-                Portable, programmable APIs for Solana transactions and experiences.
+                DocuLEX: The Future of Legal Documentation
             </div>
 
             <div className="text-4xl  pl-96 text-black p-12 m-8 ml-28">
-                Easily embed blockchain transactions inside your app, wallet, site, Telegram bot, and social media, — wherever users already are.
+                A next-generation high-code documentation and registration platform that leverages AI, Blockchain, Zero-Knowledge Proofs (ZK), and DAO governance to redefine how organizations and individuals manage legal and official documents.
             </div>
 
             <div className=" gap-8 mx-32 ">
                 <div className="flex justify-between text-8xl text-black font-semibold bg-yellow-500 text-center">
-                    Embed. Convert. Scale.
+                    Register. Verify. Govern.
                 </div>
                 <div className="bg-[#F2F1F1] h-76 w-full my-12 rounded-2xl py-4">
                     <svg width="150" height="80"  viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
@@ -29,9 +29,9 @@ const Know_More = () => {
                         <rect width="200" height="200" fill="url(#dotPattern)" clip-path="url(#circleClip)" />
                     </svg>
                     <hr style={{ border: "1px solid white" }} />
-                    <p className="text-black text-3xl font-semibold py-8 px-4">Embed anywhere</p>
+                    <p className="text-black text-3xl font-semibold py-8 px-4">AI-Powered Processing</p>
                     <hr style={{ border: "1px solid white" }} />
-                    <p className="text-black text-xl px-4 py-4">Add ready-to-use onchain actions into any surface — no deep integrations or wallet popups.</p>
+                    <p className="text-black text-xl px-4 py-4">Intelligent document extraction, validation, and analysis. Reduce manual work and human error.</p>
                 </div>
                 <div className="bg-[#F2F1F1] h-76 w-full rounded-2xl py-4">
                     <svg width="150" height="80" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
@@ -46,9 +46,9 @@ const Know_More = () => {
                         </g>
                     </svg>
                    <hr style={{ border: "1px solid white" }} />
-                    <p className="text-black text-3xl font-semibold py-8 px-4">Embed anywhere</p>
+                    <p className="text-black text-3xl font-semibold py-8 px-4">ZK Privacy & Security</p>
                     <hr style={{ border: "1px solid white" }} />
-                    <p className="text-black text-xl px-4 py-4">Add ready-to-use onchain actions into any surface — no deep integrations or wallet popups.</p>
+                    <p className="text-black text-xl px-4 py-4">Zero-Knowledge Proofs verify authenticity without exposing sensitive data. Trust without disclosure.</p>
                 </div>
 
                 <div className="bg-[#F2F1F1] h-76 w-full rounded-2xl my-12 py-4">
@@ -93,9 +93,9 @@ const Know_More = () => {
                         </g>
                     </svg>
                     <hr style={{ border: "1px solid white" }} />
-                    <p className="text-black text-3xl font-semibold py-8 px-4">Embed anywhere</p>
+                    <p className="text-black text-3xl font-semibold py-8 px-4">Blockchain + DAO</p>
                     <hr style={{ border: "1px solid white" }} />
-                    <p className="text-black text-xl px-4 py-4">Add ready-to-use onchain actions into any surface — no deep integrations or wallet popups.</p>
+                    <p className="text-black text-xl px-4 py-4">Immutable records on-chain. Community-driven governance for transparent, democratic policy.</p>
                 </div>
             </div>
         </div>
