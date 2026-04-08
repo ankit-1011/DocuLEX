@@ -2,7 +2,7 @@
 
 const Abstraction = () => {
     return (
-        <div className="min-h-screen p-24 ">
+        <div className="min-h-screen bg-black p-24">
             <h1 className="text-center text-gray-300 text-6xl font-semibold">Traditional Documents vs DocuLEX.
                 From Friction to Flow.</h1>
 

@@ -1,22 +1,15 @@
 import './App.css'
-import Abstraction from './components/Abstraction'
-import Footer from './components/Footer'
-import Hero from './components/Hero'
-import How_Works from './components/How_Works'
-import Know_More from './components/Know_More'
-import Navbar from './components/Navbar'
-
+import { Routes, Route } from 'react-router-dom'
+import Home from './pages/home'
+import AuthPage from './pages/AuthPage'
 
 const App = () => {
   return (
-    <div >
-      <Navbar/>
-      <Hero/>
-      <Know_More/>
-      <Abstraction/>
-      <How_Works/>
-      <Footer/>
-    </div>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/auth" element={<AuthPage />} />
+    </Routes>
   )
 }
 

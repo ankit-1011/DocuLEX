@@ -3,7 +3,7 @@
 const Know_More = () => {
     return (
         <div className="min-h-screen bg-white py-12">
-            <div className="text-6xl font-medium flex justify-center pt-20 px-46 text-black">
+            <div className="text-6xl font-medium flex justify-center pt-20 px-11 text-center text-black max-w-6xl mx-auto">
                 DocuLEX: The Future of Legal Documentation
             </div>
 
@@ -15,7 +15,7 @@ const Know_More = () => {
                 <div className="flex justify-between text-8xl text-black font-semibold bg-yellow-500 text-center">
                     Register. Verify. Govern.
                 </div>
-                <div className="bg-[#F2F1F1] h-76 w-full my-12 rounded-2xl py-4">
+                <div className="bg-[#F2F1F1] min-h-[19rem] w-full my-12 rounded-2xl py-4">
                     <svg width="150" height="80"  viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                         <defs>
                             <pattern id="dotPattern" width="14" height="14" patternUnits="userSpaceOnUse">
@@ -33,7 +33,7 @@ const Know_More = () => {
                     <hr style={{ border: "1px solid white" }} />
                     <p className="text-black text-xl px-4 py-4">Intelligent document extraction, validation, and analysis. Reduce manual work and human error.</p>
                 </div>
-                <div className="bg-[#F2F1F1] h-76 w-full rounded-2xl py-4">
+                <div className="bg-[#F2F1F1] min-h-[19rem] w-full rounded-2xl py-4">
                     <svg width="150" height="80" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                         <g fill="none" stroke="black" stroke-width="3" stroke-linecap="round">
                             <ellipse cx="100" cy="40" rx="70" ry="18" />
@@ -51,7 +51,7 @@ const Know_More = () => {
                     <p className="text-black text-xl px-4 py-4">Zero-Knowledge Proofs verify authenticity without exposing sensitive data. Trust without disclosure.</p>
                 </div>
 
-                <div className="bg-[#F2F1F1] h-76 w-full rounded-2xl my-12 py-4">
+                <div className="bg-[#F2F1F1] min-h-[19rem] w-full rounded-2xl my-12 py-4">
                     <svg width="150" height="80" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                         <g transform="translate(100 100)" stroke="black" stroke-width="4" stroke-linecap="round">
                             <line y1="-80" y2="-68" transform="rotate(0)" />
