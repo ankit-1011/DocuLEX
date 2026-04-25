@@ -13,7 +13,8 @@ const pool = new Pool({
 
 pool.connect()
 .then(()=>{
-    console.log("Pool connected!",pool);
+    console.log("Pool connected!");
+    // console.log("Pool connected!",pool);
 })
 .catch(()=>{
     console.log("Pool not connected!");

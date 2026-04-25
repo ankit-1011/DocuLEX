@@ -1,0 +1,725 @@
+# API Documentation
+
+**Base URL:** `http://127.0.0.1:8000/api/account/`
+
+---
+
+## 1. Register User
+
+**Endpoint:** `POST /register/`
+**Description:** Register a new user by validating email and phone against the leads table.
+
+### Request Body
+
+```json
+{
+  "email": "user@example.com",
+  "phone": "1234567890",
+  "password": "your_password"
+}
+```
+
+### Success Response (201 Created)
+
+```json
+{
+  "message": "User registered successfully",
+  "access_token": "<jwt_access_token>",
+  "refresh_token": "<jwt_refresh_token>"
+}
+```
+
+---
+
+## 2. Login User
+
+**Endpoint:** `POST /login/`
+**Description:** Login using email or phone number.
+
+### Request Body
+
+```json
+{
+  "user_id": "user@example.com",
+  "password": "your_password"
+}
+```
+
+### Success Response (200 OK)
+
+```json
+{
+  "access_token": "<jwt_access_token>",
+  "refresh_token": "<jwt_refresh_token>"
+}
+```
+
+---
+
+# Dashboard API
+
+**Endpoint:** `GET /api/account/dashboard/`
+**Authentication:** Required (`IsAuthenticated`)
+
+---
+
+## Description
+
+This API returns dashboard data based on user role:
+
+### Admin (`role = admin`)
+
+* View all leads
+* Apply filters (case_id, search, status, campaign)
+* Get summary metrics
+
+### Team Member (`role = team_member`)
+
+* View assigned leads only
+* Get:
+
+  * Summary metrics
+  * Action queue (escalations, callbacks)
+  * Scheduled callbacks
+
+### Normal User
+
+* View only their own lead data using `case_id`
+
+---
+
+## Query Parameters (Admin Only)
+
+| Param    | Description                               |
+| -------- | ----------------------------------------- |
+| case_id  | Exact case ID filter                      |
+| search   | Search across case_id, name, email, phone |
+| status   | Filter by lead status                     |
+| campaign | Filter by campaign name                   |
+
+---
+
+## Admin Request Examples
+
+```http
+GET /api/account/dashboard/
+GET /api/account/dashboard/?case_id=shiv489225
+GET /api/account/dashboard/?search=shiv
+GET /api/account/dashboard/?status=New Lead
+GET /api/account/dashboard/?campaign=Summer Campaign 2026
+```
+
+---
+
+## Admin Response
+
+```json
+{
+  "summary": {
+    "total_leads": 8,
+    "new_leads": 1,
+    "overdue_next_contact": 2,
+    "total_attempts": 14
+  },
+  "leads": [
+    {
+      "id": 4,
+      "case_id": "shiv489225",
+      "name": "Shiv",
+      "email": "shiv@example.com",
+      "phone": "9300722529",
+      "campaign_name": "Summer Campaign 2026",
+      "source": "website",
+      "status": "Unreachable",
+      "priority": "Hot",
+      "total_attempt": 4,
+      "next_contact_at": null,
+      "attempts": {
+        "attempts": []
+      }
+    }
+  ]
+}
+```
+
+---
+
+## Team Member Request
+
+```http
+GET /api/account/dashboard/
+```
+
+---
+
+## Team Member Response
+
+```json
+{
+  "summary": {
+    "in_progress": 5,
+    "escalation_needed": 2,
+    "closed_today": 1,
+    "Subscribe_today": null,
+    "total_attempts": 12,
+    "new_leads": null
+  },
+  "action_queue": [
+    {
+      "case_id": "CASE001",
+      "name": "John",
+      "phone": "9999999999",
+      "reason": "Human request",
+      "message": "Customer is expecting your call",
+      "confidence_score": 45,
+      "sentiment": "negative",
+      "time_waiting": "2026-04-08T10:30:00"
+    }
+  ],
+  "scheduled_callbacks": [
+    {
+      "case_id": "CASE002",
+      "name": "Alice",
+      "phone": "8888888888",
+      "next_contact_at": "2026-04-09T11:00:00"
+    }
+  ]
+}
+```
+
+---
+
+## User Request
+
+```http
+GET /api/account/dashboard/
+```
+
+---
+
+## User Response
+
+```json
+{
+  "lead": {
+    "id": 7,
+    "case_id": "rahul3a63f6",
+    "name": "Rahul",
+    "email": "rahul@example.com",
+    "phone": "9515502506",
+    "campaign_name": "Enterprise Sales Initiative",
+    "source": "conference",
+    "status": "Interested",
+    "priority": "Hot",
+    "total_attempt": 2,
+    "next_contact_at": null,
+    "attempts": {
+      "attempts": []
+    }
+  }
+}
+```
+
+---
+
+## Summary Fields Explanation
+
+### Admin
+
+* `total_leads`: Total number of leads
+* `new_leads`: Leads with status `"New Lead"`
+* `overdue_next_contact`: Leads where `next_contact_at` is in the past
+* `total_attempts`: Sum of all attempts
+
+### Team Member
+
+* `in_progress`: Leads not marked as Rejected or Human Needed
+* `escalation_needed`: Leads with status `"Human Needed"`
+* `closed_today`: Leads marked Rejected today
+* `total_attempts`: Total attempts across leads
+* `Subscribe_today`: Placeholder
+* `new_leads`: Placeholder
+
+---
+
+## Notes
+
+* `attempts` field is parsed JSON
+* `next_contact_at` null values are ignored in overdue calculation
+* Dates are returned in ISO format
+* `action_queue` is limited to latest 10 items
+* `scheduled_callbacks` are sorted by nearest date
+---
+# CASE & LEAD APIs
+
+## 1. List Cases
+
+**Endpoint:** `GET /listcases/`
+**Description:** Returns list of cases assigned to the logged-in team member.
+
+### Response
+
+```json
+{
+  "cases": [
+    {
+      "case_id": "string",
+      "name": "string",
+      "phone": "string",
+      "status": "string",
+      "last_call_outcome": "Not available",
+      "next_action": "Not available",
+      "priority": "Normal"
+    }
+  ]
+}
+```
+
+---
+
+## 2. Lead Detail View
+
+**Endpoint:** `GET /case-detailed/<case_id>/`
+**Description:** Returns complete lead profile, lead metadata, and outreach timeline.
+
+### Response
+
+```json
+{
+  "lead_profile": {
+    "name": "string | null",
+    "phone": "string | null",
+    "email": "string | null",
+    "investment_goal": "string",
+    "amount": "string | null",
+    "risk_appetite": "string",
+    "time_horizon": "string"
+  },
+  "lead_meta": {
+    "source": "string | null",
+    "date_captured": "datetime | null",
+    "case_id": "string",
+    "current_status": "string | null"
+  },
+  "outreach_timeline": []
+}
+```
+
+---
+
+## 3. Make Cold Lead
+
+**Endpoint:** `PUT /make-cold-lead/<case_id>/`
+**Description:** Marks a lead as COLDLEAD.
+
+### Response
+
+```json
+{
+  "message": "Lead marked as cold"
+}
+```
+
+---
+
+## 4. Assign Team Member
+
+**Endpoint:** `POST /assign-team-to-leads/`
+**Description:** Assign multiple case IDs to a team member.
+
+### Request
+
+```json
+{
+  "case_ids": ["CASE001", "CASE002"],
+  "team_member_id": "int"
+}
+```
+
+### Response
+
+```json
+{
+  "message": "Leads assigned successfully"
+}
+```
+
+---
+
+## 5. Escalation Queue
+
+**Endpoint:** `GET /list-escalations/`
+**Description:** Returns cases requiring human intervention.
+
+### Response
+
+```json
+{
+  "escalations": []
+}
+```
+
+---
+
+## 6. Scheduled Callbacks
+
+**Endpoint:** `GET /list-ScheduledCallbacks/`
+**Description:** Returns upcoming callbacks.
+
+### Response
+
+```json
+{
+  "callbacks": []
+}
+```
+
+---
+
+# DOCUMENT & OCR APIs
+
+## 7. Upload Documents
+
+**Endpoint:** `POST /upload-documents/`
+**Description:** Upload PAN, Aadhaar, and Bank Statement (Max 5MB per file).
+
+### Content-Type
+
+`multipart/form-data`
+
+### Fields
+
+* `pan_card` (PDF/JPG/PNG, max 5MB)
+* `aadhaar_card` (PDF/JPG/PNG, max 5MB)
+* `bank_statement` (PDF/JPG/PNG, max 5MB)
+
+### Success Response
+
+```json
+{
+  "message": "Document processing completed",
+  "results": {
+    "pan": {"status": "COMPLETED", "data": {}},
+    "aadhaar": {"status": "COMPLETED", "data": {}},
+    "bank": {"status": "FAILED", "error": "File not provided"}
+  }
+}
+```
+
+---
+
+## 8. OCR Detail
+
+**Endpoint:** `GET /CaseOCRDetailAPIView/<case_id>/`
+**Description:** Returns OCR extracted data.
+
+### Response
+
+```json
+{
+  "pan": {},
+  "aadhaar": {},
+  "bank": {},
+  "status": "Pending | Completed | Failed"
+}
+```
+
+---
+
+# USER APIs
+
+## 9. User Profile
+
+**Endpoint:** `GET /user-profile/`
+
+### Response
+
+```json
+{
+  "name": "string",
+  "email": "string",
+  "phone": "string",
+  "investment_goal": "string",
+  "amount": "string",
+  "risk_appetite": "string",
+  "time_horizon": "string"
+}
+```
+
+---
+
+# COMMUNICATION APIs
+
+## 10. Internal Notes
+
+**Endpoints:**
+
+* `GET /internal-notes/`
+* `POST /internal-notes/`
+* `PUT /internal-notes/<id>/`
+* `DELETE /internal-notes/<id>/`
+
+### Response
+
+```json
+{
+  "notes": []
+}
+```
+
+---
+
+## 11. Communication Logs
+
+**Endpoint:** `GET /communication-logs/<case_id>/`
+
+### Response
+
+```json
+{
+  "logs": []
+}
+```
+
+---
+
+## 12. WhatsApp Chat
+
+**Endpoint:** `GET /whatsapp-chat/<case_id>/`
+
+### Response
+
+```json
+{
+  "messages": []
+}
+```
+
+---
+
+# FUND SELECTION APIs
+
+## 13. Recommended Funds
+
+**Endpoint:** `GET /funds-recommended/`
+
+### Response
+
+```json
+{
+  "recommended_funds": [
+    {
+      "id": "string",
+      "name": "string",
+      "returnPct": "number",
+      "period": "string",
+      "logo": "string"
+    }
+  ]
+}
+```
+
+---
+
+## 14. Investment Types
+
+**Endpoint:** `GET /funds-investment-types/`
+
+### Response
+
+```json
+{
+  "investment_types": [
+    {
+      "type": "SIP | LUMP_SUM",
+      "label": "string"
+    }
+  ]
+}
+```
+
+---
+
+## 15. Explore Funds
+
+**Endpoint:** `GET /funds-explore/?category=&risk=&sort=`
+
+### Description
+
+Returns fund list with filtering.
+
+### Response
+
+```json
+{
+  "funds": []
+}
+```
+
+
+--------------------------------------------------
+PORTFOLIO (DUMMY DATA)
+--------------------------------------------------
+
+
+
+
+# Dummy Portfolio APIs Documentation
+
+**Base URL:** `http://127.0.0.1:8000/api/account/`
+
+---
+
+1. Portfolio Dashboard
+
+Endpoint:
+"GET /portfolio/<case_id>/"
+
+Access:
+
+- User → only own case_id
+- Admin → any case_id
+
+Response:
+
+{
+  "case_id": "CASE001",
+  "summary": {
+    "total_invested": 10100,
+    "current_value": 10335,
+    "total_profit": 235
+  },
+  "funds": [
+    {
+      "case_id": "CASE001",
+      "fund_name": "Axis Bluechip Fund",
+      "total_units": 150,
+      "total_invested": 6800,
+      "current_nav": 46.10,
+      "current_value": 6915,
+      "profit_loss": 115
+    }
+  ]
+}
+
+---
+
+2. Transaction History
+
+Endpoint:
+"GET /transactions/<case_id>/"
+
+Access:
+
+- User → only own case_id
+- Admin → any case_id
+
+Response:
+
+{
+  "case_id": "CASE001",
+  "transactions": [
+    {
+      "transaction_id": "TXN002",
+      "fund_id": "FUND001",
+      "transaction_type": "SIP",
+      "units": 50,
+      "amount": 2300,
+      "transaction_date": "2026-01-01"
+    }
+  ]
+}
+
+---
+
+3. Customer Details
+
+Endpoint:
+"GET /customer/<case_id>/"
+
+Response:
+
+{
+  "case_id": "CASE001",
+  "customer": {
+    "case_id": "CASE001",
+    "name": "Aman",
+    "email": "aman@example.com",
+    "created_at": "2026-03-20T10:00:00Z"
+  }
+}
+
+---
+
+4. Holdings
+
+Endpoint:
+"GET /holdings/<case_id>/"
+
+Response:
+
+{
+  "case_id": "CASE001",
+  "holdings": [
+    {
+      "case_id": "CASE001",
+      "fund_id": "FUND001",
+      "total_units": 150,
+      "total_invested": 6800
+    }
+  ]
+}
+
+---
+
+5. Mutual Funds (Admin Only)
+
+Endpoint:
+"GET /funds/"
+
+Response:
+
+{
+  "mutual_funds": [
+    {
+      "fund_id": "FUND001",
+      "fund_name": "Axis Bluechip Fund",
+      "amc_name": "Axis AMC",
+      "category": "Large Cap",
+      "isin": "INF846K01EW2"
+    }
+  ]
+}
+
+---
+
+6. NAV History
+
+Endpoint:
+"GET /nav/<fund_id>/"
+
+Response:
+
+{
+  "fund_id": "FUND001",
+  "nav_history": [
+    {
+      "nav_date": "2026-03-18",
+      "nav_value": 45.23
+    },
+    {
+      "nav_date": "2026-03-20",
+      "nav_value": 46.10
+    }
+  ]
+}
+
+---
+
+Notes
+
+- All APIs require authentication (JWT)
+- Dummy data is served from JSON (no database)
+- Role-based access enforced using "is_staff"
+
+---

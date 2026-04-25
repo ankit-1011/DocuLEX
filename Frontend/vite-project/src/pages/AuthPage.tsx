@@ -42,11 +42,11 @@ const AuthPage = () => {
             if(state==="login"){
                 const token=  localStorage.setItem("token", data.token);
                 console.log(token);
-                navigate("/home");
+                navigate("/dashboard");
                 alert("Login successful");
             }else{
                alert("Account created successfully");
-               navigate("/home");
+               navigate("/dashboard");
             }
            
         }catch(error){
