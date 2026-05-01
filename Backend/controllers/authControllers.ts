@@ -1,4 +1,4 @@
-import {Router} from 'express';
+import { Router } from 'express';
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import pool from '../models/db';
@@ -9,7 +9,7 @@ const router = Router();
 
 //Signup route
 router.post('/signup', async (req, res) => {
-    const {email, password, name} = req.body;
+    const { email, password, name } = req.body;
 
     const existingUser = await pool.query('SELECT * FROM users WHERE email=$1', [email]);
 
@@ -23,7 +23,7 @@ router.post('/signup', async (req, res) => {
         .then(() => {
             return res.status(201).json({ message: 'User created successfully!' })
         })
-        .catch((err:any) => {
+        .catch((err: any) => {
             return res.status(500).json({ message: err.message });
         })
 })
@@ -31,7 +31,7 @@ router.post('/signup', async (req, res) => {
 
 //Login route
 router.post('/login', async (req, res) => {
-    const {email, password} = req.body;
+    const { email, password } = req.body;
 
     const existingUser = await pool.query('SELECT * FROM users WHERE email=$1', [email]);
 
@@ -44,12 +44,12 @@ router.post('/login', async (req, res) => {
     if (!isMatch) {
         return res.status(404).json({ message: "Invalid password!" });
     }
-   
+
     const user = existingUser.rows[0];
 
     const token = jwt.sign({ userId: user.id, email: user.email }, process.env.JWT_SECRET as string, { expiresIn: "7d" })
 
-    res.json({token})
+    res.json({ token })
 })
 
 export default router;

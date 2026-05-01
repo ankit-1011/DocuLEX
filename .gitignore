@@ -1,9 +1,8 @@
 
 #ENVIRONMENT_VARIABLES
 .env
-
 #NODE_MODULES
 node_modules/
+#BUILD_OUTPUT
 uploads/
-.env
 dist/

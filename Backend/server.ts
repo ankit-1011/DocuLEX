@@ -10,7 +10,7 @@ dotenv.config();
 
 const app = express();
 const router = express.Router();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
@@ -22,7 +22,7 @@ router.get('/profile', authenticateJWT, (req, res) => {
   res.json({ message: "Protected data", user: (req as any).user });
 });
 
-router.post('/upload',upload.single('file'),uploadFile);
+router.post('/upload',authenticateJWT,upload.single('file'),uploadFile);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

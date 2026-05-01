@@ -1,8 +1,41 @@
+import { useState } from "react";
+
+
 type UploadFileProps = {
     onClose: () => void;
 };
 
 const UploadFile = ({ onClose }: UploadFileProps) => {
+
+
+    const [file, setFile] = useState<File | null>(null);
+    const token = localStorage.getItem("token");
+
+    const handleUpload = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData();
+        if (!file) return;
+        formData.append('file', file);
+
+        try {
+            const res = await fetch('http://localhost:3000/api/upload', {
+                method: 'POST',
+                headers:{
+                    authorization: `Bearer ${token}`
+                },
+                body: formData,
+            })
+
+            const data = await res.json();
+            console.log("Upload data:", data);
+            alert('File uploaded successfully!');
+            onClose();
+        }
+        catch {
+            console.log('Error uploading file');
+        }
+    }
+
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="relative w-full max-w-[440px] rounded-md border border-white/30 bg-black p-8 shadow-2xl">
@@ -24,7 +57,7 @@ const UploadFile = ({ onClose }: UploadFileProps) => {
                 </div>
 
                 {/* Form */}
-                <form className="space-y-5">
+                <form className="space-y-5" onSubmit={handleUpload}>
                     <div>
                         <label className="text-sm text-white">Name</label>
                         <input
@@ -41,6 +74,7 @@ const UploadFile = ({ onClose }: UploadFileProps) => {
                         <input
                             type="file"
                             className="w-full mt-1 p-2 rounded bg-zinc-800/80 text-white outline-none cursor-pointer file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:bg-white file:text-black hover:file:bg-white/90"
+                            onChange={(e) => setFile(e.target.files?.[0] || null)}
                         />
                     </div>
 
