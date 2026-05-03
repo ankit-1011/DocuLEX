@@ -17,7 +17,7 @@ const Hero = () => {
             Transparent disputes, immutable records, and trustless enforcement — bringing justice onchain.
             </div>
               
-              <div className="flex gap-3 mt-4 translate-x-4">
+              <div className="flex gap-3 mt-4 marquee">
                 <button className=" text-[#35e64d] border border-green-500 text-3xl p-2 rounded-xl">Success<i className="text-medium ">✓</i></button>
                 <button className="border border-white text-white  text-3xl rounded-xl p-2">Onchain</button>
                  <button className=" border border-white text-white  text-3xl rounded-xl p-2">ZK Proof</button>

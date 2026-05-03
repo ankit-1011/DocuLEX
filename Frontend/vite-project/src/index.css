@@ -1,6 +1,22 @@
 @import "tailwindcss";
 
 
-@theme{
+@theme {
     --tw-gradient-to: #f472b6 var(--tw-gradient-to-position);
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100%); /* start: right side se bahar */
+    overflow-x: hidden;
+  }
+  100% {
+    transform: translateX(-100%); /* end: left side se bahar */
+    overflow-x: hidden;
+  }
+}
+
+.marquee {
+  animation: marquee 20s linear infinite;
+  will-change: transform;
 }

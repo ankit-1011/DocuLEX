@@ -34,7 +34,7 @@ const Navbar = () => {
                 </div>
 
                 <div className="border-2 border-white  rounded-4xl h-10 bg-[#A3E635] cursor-pointer text-black flex justify-center items-center">
-                    <Link to="/auth" className='cursor-pointer h-10 min-w-[8.75rem] px-4 rounded-4xl hover:bg-violet-600 focus:outline focus:outline-2 focus:outline-offset-2 active:bg-violet-900 hover:text-amber-50 flex items-center justify-center'>Sign in</Link>
+                    <Link to="/auth" className='cursor-pointer h-10 min-w-[8.75rem] px-4 rounded-4xl hover:bg-violet-500 focus:outline focus:outline-2 focus:outline-offset-2 active:bg-violet-100 hover:text-amber-50 flex items-center justify-center '>Sign in</Link>
                 </div>
             </div>
         </div>
