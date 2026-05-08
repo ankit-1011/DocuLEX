@@ -45,8 +45,8 @@ const AuthPage = () => {
                 navigate("/dashboard");
                 alert("Login successful");
             }else{
-               alert("Account created successfully");
-               navigate("/dashboard");
+               alert("Registration successful. Please login.");
+               navigate("/auth");
             }
            
         }catch(error){

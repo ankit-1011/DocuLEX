@@ -4,6 +4,7 @@ import UploadFile from "../components/UploadFile";
 import Footer from "../components/Footer";
 import SkipTemplate from "../components/SkipTemplate";
 import { useState } from "react";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const DashboardPage = () => {
 
@@ -32,9 +33,10 @@ const DashboardPage = () => {
 
                     <User className="opacity-50 h-5 cursor-pointer" />
 
-                    <button className="border px-3 py-1 rounded-lg bg-white text-black font-medium hover:bg-gray-200 active:scale-75 transition-all ease-in cursor-pointer">
-                        Connect Wallet
-                    </button>
+                    <ConnectButton showBalance={false} chainStatus="icon" accountStatus={{
+                        smallScreen: 'avatar',
+                        largeScreen: 'full',
+                    }} />
                 </div>
             </div>
 
