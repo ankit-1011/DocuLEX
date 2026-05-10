@@ -1,26 +1,34 @@
 import { useState } from "react";
+import { useAccount } from "wagmi";
 
 
 type UploadFileProps = {
     onClose: () => void;
 };
 
+
 const UploadFile = ({ onClose }: UploadFileProps) => {
 
 
     const [file, setFile] = useState<File | null>(null);
     const token = localStorage.getItem("token");
+    const email = localStorage.getItem("email");
+    const account = useAccount()
 
     const handleUpload = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData();
         if (!file) return;
+        if (!email) {
+            alert("Please log in again — session email is missing.");
+            return;
+        }
         formData.append('file', file);
 
         try {
             const res = await fetch('http://localhost:3000/api/upload', {
                 method: 'POST',
-                headers:{
+                headers: {
                     authorization: `Bearer ${token}`
                 },
                 body: formData,
@@ -28,11 +36,48 @@ const UploadFile = ({ onClose }: UploadFileProps) => {
 
             const data = await res.json();
             console.log("Upload data:", data);
+
+            if (!res.ok) {
+                throw new Error(data?.error ?? data?.message ?? `Upload failed (${res.status})`);
+            }
+
+            // Backend wraps Pinata as { pinata: { data: { cid } } }; optional top-level `cid` from API.
+            const cid =
+                data.cid ??
+                data.pinata?.data?.cid ??
+                data.pinata?.cid ??
+                data.data?.cid;
+
+            if (!cid) {
+                throw new Error("No CID in upload response (expected pinata.data.cid).");
+            }
+
+            const metaDB = await fetch('http://localhost:3000/api/docs', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    email,
+                    cid,
+                    filename: file.name,
+                    filetype: file.type,
+                    wallet_address: account.address ?? null,
+                })
+            });
+
+            const metaDBResponse = await metaDB.json();
+            console.log("Metadata DB response:", metaDBResponse);
+            if (!metaDB.ok) {
+                throw new Error(metaDBResponse?.message ?? metaDBResponse?.error ?? `Save metadata failed (${metaDB.status})`);
+            }
             alert('File uploaded successfully!');
             onClose();
         }
-        catch {
-            console.log('Error uploading file');
+        catch (err) {
+            console.error('Error uploading file:', err);
+            alert(err instanceof Error ? err.message : 'Error uploading file');
         }
     }
 
@@ -58,7 +103,7 @@ const UploadFile = ({ onClose }: UploadFileProps) => {
 
                 {/* Form */}
                 <form className="space-y-5" onSubmit={handleUpload}>
-                    <div>
+                    {/* <div>
                         <label className="text-sm text-white">Name</label>
                         <input
                             type="text"
@@ -66,7 +111,7 @@ const UploadFile = ({ onClose }: UploadFileProps) => {
                             placeholder="Documents.pdf"
                             required
                         />
-                    </div>
+                    </div> */}
 
                     {/* File Upload */}
                     <div>

@@ -20,8 +20,8 @@
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.14.0",
     "tailwindcss": "^4.1.18",
-    "viem": "2.x",
-    "wagmi": "^3.6.10"
+    "viem": "^2",
+    "wagmi": "^2.19.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

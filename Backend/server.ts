@@ -3,7 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './controllers/authControllers';
 import {authenticateJWT} from "./middlewares/auth";
-import {uploadFile} from './controllers/uploadControllers';
+import DocsDBControllers from './controllers/DocsDBControllers';
+import {uploadFile} from './controllers/uploadPinataControllers';
 import upload from './middlewares/upload';
 import rateLimit from 'express-rate-limit';
 
@@ -23,16 +24,19 @@ const limiter = rateLimit({
 	legacyHeaders: false, 
 	ipv6Subnet: 56, 
 })
+app.use(limiter);
 
 app.use('/api/auth', authRoutes);
-app.use('/api', router);
-app.use(limiter);
+
 
 router.get('/profile', authenticateJWT, (req, res) => {
   res.json({ message: "Protected data", user: (req as any).user });
 });
 
 router.post('/upload',authenticateJWT,upload.single('file'),uploadFile);
+router.post('/docs', authenticateJWT, DocsDBControllers);
+
+app.use('/api', router);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

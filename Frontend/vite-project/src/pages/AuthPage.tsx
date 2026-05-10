@@ -40,8 +40,9 @@ const AuthPage = () => {
             }
 
             if(state==="login"){
-                const token=  localStorage.setItem("token", data.token);
-                console.log(token);
+                localStorage.setItem("token", data.token);
+                    localStorage.setItem("email", formData.email);
+              
                 navigate("/dashboard");
                 alert("Login successful");
             }else{

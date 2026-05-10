@@ -16,7 +16,7 @@ export const uploadFile = async (req: Request, res: Response) => {
             body: formData,
         });
 
-      if (!response.ok) {
+        if (!response.ok) {
             const data = await response.json();
             console.error("Pinata upload failed:", data);
             return res.status(response.status >= 400 ? response.status : 502).json({
@@ -27,7 +27,12 @@ export const uploadFile = async (req: Request, res: Response) => {
 
         const data = await response.json();
         console.log("Pinata response:", data);
-        res.status(200).json({ message: "File uploaded successfully", pinata: data });
+        const cid = data?.data?.cid ?? data?.cid;
+        res.status(200).json({
+            message: "File uploaded successfully",
+            pinata: data,
+            cid,
+        });
 
     } catch (err) {
         console.error(err);

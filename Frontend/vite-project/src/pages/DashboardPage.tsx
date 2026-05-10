@@ -2,14 +2,16 @@ import { Download, LayoutGrid, Logs, MoonStar, ScanEye, Sun, User } from "lucide
 import Logo from "../assets/logo.png";
 import UploadFile from "../components/UploadFile";
 import Footer from "../components/Footer";
-import SkipTemplate from "../components/SkipTemplate";
+// import SkipTemplate from "../components/SkipTemplate";
 import { useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useAccount} from "wagmi";
 
 const DashboardPage = () => {
 
     const [Open, setOpen] = useState(false)
     const [gridOpen, setGrid] = useState("first")
+    
 
 
     return (
