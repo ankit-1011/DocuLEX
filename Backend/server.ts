@@ -3,7 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './controllers/authControllers';
 import {authenticateJWT} from "./middlewares/auth";
-import DocsDBControllers from './controllers/DocsDBControllers';
+import {DocsDBControllers,  docsDBRetrival } from './controllers/DocsDBControllers';
 import {uploadFile} from './controllers/uploadPinataControllers';
 import upload from './middlewares/upload';
 import rateLimit from 'express-rate-limit';
@@ -35,6 +35,7 @@ router.get('/profile', authenticateJWT, (req, res) => {
 
 router.post('/upload',authenticateJWT,upload.single('file'),uploadFile);
 router.post('/docs', authenticateJWT, DocsDBControllers);
+router.get('/docs', authenticateJWT, docsDBRetrival);
 
 app.use('/api', router);
 

@@ -1,9 +1,16 @@
-import { Maximize } from 'lucide-react'
-import React from 'react'
+import { Cross, Maximize } from 'lucide-react'
 
-const SkipTemplate = () => {
+
+type SkipTemplateProps = {
+    onClose: () => void;
+};
+
+const SkipTemplate = ({ onClose }: SkipTemplateProps) => {
+
+
     return (
-        <div className='fixed inset-0 bg-black/80 flex items-center justify-center z-50'>
+        <div className='fixed inset-0 bg-black/60 flex items-center justify-center z-50'>
+            <Cross className='absolute top-4 right-4 cursor-pointer' onClick={onClose} />
             <div className='flex justify-center items-center flex-col bg-black  rounded-md p-10 w-full text-center'>
                 <h1 className='text-2xl font-bold'>Skip the Long Read</h1>
                 <p className='w-[700px] mt-6 font-medium text-xl'>Get a concise summary of your legal documents with our AI-powered summarization feature. Save time and quickly understand the key points of your agreements, contracts, and other legal files.</p>

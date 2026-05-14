@@ -1,6 +1,7 @@
 'use client';
 
 import '@rainbow-me/rainbowkit/styles.css';
+import { Toaster } from 'sonner';
 
 import {
     getDefaultConfig,
@@ -42,6 +43,7 @@ export function Providers({
             <QueryClientProvider client={queryClient}>
                 <RainbowKitProvider coolMode showRecentTransactions={true}>
                     {children}
+                    <Toaster richColors position="top-right" />
                 </RainbowKitProvider>
             </QueryClientProvider>
         </WagmiProvider>

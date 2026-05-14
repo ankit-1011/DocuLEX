@@ -2,17 +2,59 @@ import { Download, LayoutGrid, Logs, MoonStar, ScanEye, Sun, User } from "lucide
 import Logo from "../assets/logo.png";
 import UploadFile from "../components/UploadFile";
 import Footer from "../components/Footer";
-// import SkipTemplate from "../components/SkipTemplate";
-import { useState } from "react";
+import SkipTemplate from "../components/SkipTemplate";
+import { useEffect, useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useAccount} from "wagmi";
+import { useAccount } from "wagmi";
+import { toast } from "sonner";
+
+
+
+interface docsDataType {
+    cid: string,
+    filename: string,
+    filetype: string,
+    wallet_address: string
+    created_at: any
+}
 
 const DashboardPage = () => {
 
+
+
+
     const [Open, setOpen] = useState(false)
     const [gridOpen, setGrid] = useState("first")
-    
+    const [retrivedDocs, setRetrievedDocs] = useState<docsDataType[]>([]);
+    const [previewOpen, setPreviewOpen] = useState(false);
 
+    const account = useAccount()
+
+
+
+
+    const docsRetrival = async () => {
+        try {
+            const retrivalData = await fetch(`http://localhost:3000/api/docs?wallet_address=${account.address}`, {
+                method: 'GET', headers: {
+                    authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+            })
+
+            const data = await retrivalData.json();
+            setRetrievedDocs(data.documents);
+            console.log("Retrival data:", data);
+        } catch (err) {
+            toast.error("Error fetching documents");
+            console.error("Error fetching documents:", err);
+        }
+    }
+
+    useEffect(() => {
+        if (account.address) {
+            docsRetrival();
+        }
+    }, [account.address])
 
     return (
         <div className="bg-black min-h-screen text-white" >
@@ -67,48 +109,89 @@ const DashboardPage = () => {
                 <h1 className="text-xl">Browse and search through your legal documents. Available in multiple languages with full text access.</h1>
                 <div className="flex items-center gap-4 mb-6">
                     <input type="text" placeholder="Search by name of documents..." className="bg-transparent border border-white/30 placeholder:text-white/50 text-white focus:outline-none px-3 py-1 rounded-lg w-full" />
-                    <div className="flex gap-2 border px-4 py-2 rounded-md cursor-pointer active:scale-75 transition-all ease-in" onClick={() => setGrid("first")}><Logs />List</div>
-                    <div className="flex gap-2 border px-4 py-2 rounded-md cursor-pointer bg-white text-black active:scale-75 transition-all ease-in" onClick={() => setGrid("second")}><LayoutGrid />Grid</div>
+                    <div className="flex gap-2 border px-4 py-2 rounded-md cursor-pointer active:scale-75 transition-all ease-in" onClick={() => setGrid("second")}><Logs />List</div>
+                    <div className="flex gap-2 border px-4 py-2 rounded-md cursor-pointer bg-white text-black active:scale-75 transition-all ease-in" onClick={() => setGrid("first")}><LayoutGrid />Grid</div>
                 </div>
 
 
 
-                {/* Example Card */}
+                {/* Data Shown in Card Format */}
                 {gridOpen === "first" ? (
-                    <div className="grid grid-cols-3 gap-6  ">
-                        <div className="border border-white/20 p-6 h-46 rounded-lg  transition">
-                            <h4 className="font-semibold mb-2">1981 Development Councils Elections</h4>
-                            <p className="text-sm text-white/60">Date: 12 Feb 2026</p>
 
+                    <div className="grid grid-cols-3 gap-6">
+                        {retrivedDocs.map((doc, index) => (
+                            <div key={index}>
+                                <div className="border border-white/20 p-6 h-46 rounded-lg transition">
+
+                                    <h4 className="font-semibold mb-2">
+                                        {doc.filename}
+                                    </h4>
+
+                                    <p className="text-sm text-white/60">
+                                        <p>
+                                            {new Date(doc.created_at).toLocaleDateString()}
+                                        </p>
+                                    </p>
+
+                                    <div className="flex justify-between items-center mt-10">
+
+                                        <p className="text-sm text-green-400 mt-2">
+                                            Secured
+                                        </p>
+
+                                        <div className="flex gap-3">
+
+                                            <button className="flex gap-2 rounded-md p-1 border border-amber-400 text-amber-400 active:scale-80 transition" onClick={() => setPreviewOpen(true)}>
+                                                <ScanEye />
+                                                Preview
+                                            </button>
+
+                                            {previewOpen && (   
+                                                <SkipTemplate onClose={() => setPreviewOpen(false)} />
+                                            )}
+
+
+                                            <button className="flex gap-2 px-1 py-1 rounded-md border border-amber-400 text-amber-400 active:scale-80 transition font-semibold tracking-wide" >
+                                                <Download />
+                                                Download
+                                            </button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    retrivedDocs.map((doc, index) => (
+                        <div key={index} className="border border-white/20 p-6 h-46 mb-6 rounded-lg  transition cursor-pointer">
+                            <div className="flex justify-between gap-2">
+                                <div className="flex flex-col">
+                                    <h4 className="font-semibold mb-2">{doc.filename}</h4>
+                                    <p className="text-sm text-white/60"><p>
+                                        {new Date(doc.created_at).toLocaleDateString()}
+                                    </p></p>
+                                </div>
+                                <div>
+                                    CID : {doc.cid}
+                                </div>
+                            </div>
                             <div className="flex justify-between items-center mt-10">
-                                <p className="text-sm text-green-400 mt-2">Secured</p>
+                                <p className="text-md text-green-400 mt-2">Secured</p>
                                 <div className="flex gap-3">
-                                    <button className="flex gap-2 rounded-md p-1 border border-amber-400 text-amber-400 transition font-semibold tracking-wide mt-2 cursor-pointer">
+                                    <button className="flex gap-2 rounded-md p-2 border border-amber-400 text-amber-400 transition font-semibold tracking-wide mt-2 cursor-pointer active:scale-80" onClick={() => setPreviewOpen(true)}>
                                         <ScanEye />Preview
                                     </button>
-                                    <button className="flex gap-2 px-1 py-1 rounded-md border border-amber-400 text-amber-400   transition font-semibold tracking-wide mt-2 cursor-pointer">
+                                    {previewOpen && (
+                                        <SkipTemplate onClose={() => setPreviewOpen(false)} />
+                                    )}
+                                    <button className="flex gap-2 p-2 rounded-md border border-amber-400 text-amber-400 transition font-semibold tracking-wide mt-2 cursor-pointer active:scale-80">
                                         <Download />Download
                                     </button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                ) : (
-                    <div className="border border-white/20 p-6 h-46 rounded-lg  transition cursor-pointer">
-                        <h4 className="font-semibold mb-2">1981 Development Councils Elections</h4>
-                        <p className="text-sm text-white/60">Date: 12 Feb 2026</p>
-                        <div className="flex justify-between items-center mt-10">
-                            <p className="text-md text-green-400 mt-2">Secured</p>
-                            <div className="flex gap-3">
-                                <button className="flex gap-2 rounded-md p-2 border border-amber-400 text-amber-400 transition font-semibold tracking-wide mt-2 cursor-pointer">
-                                    <ScanEye />Preview
-                                </button>
-                                <button className="flex gap-2 p-2 rounded-md border border-amber-400 text-amber-400 transition font-semibold tracking-wide mt-2 cursor-pointer">
-                                    <Download />Download
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    ))
                 )}
 
 
@@ -117,7 +200,6 @@ const DashboardPage = () => {
 
             {/* Upload Modal Component */}
             {Open && <UploadFile onClose={() => setOpen(false)} />}
-            {/* <SkipTemplate/> */}
         </div>
     );
 };

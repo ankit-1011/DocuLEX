@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "sonner";
 import { useAccount } from "wagmi";
 
 
@@ -20,7 +21,7 @@ const UploadFile = ({ onClose }: UploadFileProps) => {
         const formData = new FormData();
         if (!file) return;
         if (!email) {
-            alert("Please log in again — session email is missing.");
+            toast.error("Please log in again — session email is missing.");
             return;
         }
         formData.append('file', file);
@@ -69,15 +70,16 @@ const UploadFile = ({ onClose }: UploadFileProps) => {
 
             const metaDBResponse = await metaDB.json();
             console.log("Metadata DB response:", metaDBResponse);
+            toast.success("File uploaded successfully in MetaDB!");
             if (!metaDB.ok) {
                 throw new Error(metaDBResponse?.message ?? metaDBResponse?.error ?? `Save metadata failed (${metaDB.status})`);
             }
-            alert('File uploaded successfully!');
+            toast.success("File uploaded successfully!");
             onClose();
         }
         catch (err) {
             console.error('Error uploading file:', err);
-            alert(err instanceof Error ? err.message : 'Error uploading file');
+            toast.error(err instanceof Error ? err.message : 'Error uploading file');
         }
     }
 

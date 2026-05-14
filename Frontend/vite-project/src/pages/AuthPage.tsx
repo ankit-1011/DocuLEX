@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Logo from '../assets/logo.png';
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 const AuthPage = () => {
 
     const navigate = useNavigate();
@@ -17,41 +18,43 @@ const AuthPage = () => {
         setFormData((prev) => ({
             ...prev,
             [e.target.name]: e.target.value,
-        }));      
+        }));
     };
 
-    
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        try{
-            const res = await fetch(state==="login"?"http://localhost:3000/api/auth/login":"http://localhost:3000/api/auth/signup",{
-                method:'post',
-                headers:{'content-type':'application/json'},
-                body:JSON.stringify(
-                    state==="login"?{email:formData.email,password:formData.password}:formData
+        try {
+            const res = await fetch(state === "login" ? "http://localhost:3000/api/auth/login" : "http://localhost:3000/api/auth/signup", {
+                method: 'post',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify(
+                    state === "login" ? { email: formData.email, password: formData.password } : formData
                 )
             })
 
             const data = await res.json();
-            console.log(data);
-            console.log(res);
-            if(!res.ok){
-                throw new Error(res.statusText);
+            // console.log(data);
+            // console.log(res);
+            if (!res.ok) {
+                // throw new Error(res.statusText);
+                toast.error(data.message || "An error occurred");
             }
 
-            if(state==="login"){
+            if (state === "login") {
                 localStorage.setItem("token", data.token);
-                    localStorage.setItem("email", formData.email);
-              
+                localStorage.setItem("email", formData.email);
+
                 navigate("/dashboard");
-                alert("Login successful");
-            }else{
-               alert("Registration successful. Please login.");
-               navigate("/auth");
+                toast.success("Login successful");
+            } else {
+                toast.error("Invalid Credentials");
+                navigate("/auth");
             }
-           
-        }catch(error){
-            console.error(error);
+
+        } catch (error) {
+            toast.error("An error occurred during authentication");
+            // console.error(error);
         }
     };
 
@@ -85,7 +88,7 @@ const AuthPage = () => {
                     </h2>
                 </div>
 
-         
+
                 <div className="p-6 flex-1">
                     <form onSubmit={handleSubmit} className="space-y-4">
                         {state !== "login" && (
