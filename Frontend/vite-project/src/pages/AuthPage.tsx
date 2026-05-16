@@ -44,9 +44,8 @@ const AuthPage = () => {
             if (state === "login") {
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("email", formData.email);
-
-                navigate("/dashboard");
                 toast.success("Login successful");
+                navigate("/dashboard");
             } else {
                 toast.error("Invalid Credentials");
                 navigate("/auth");

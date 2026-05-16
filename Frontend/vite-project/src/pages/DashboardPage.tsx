@@ -6,6 +6,7 @@ import SkipTemplate from "../components/SkipTemplate";
 import { useEffect, useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
+import { motion } from "framer-motion";
 import { toast } from "sonner";
 
 
@@ -18,9 +19,11 @@ interface docsDataType {
     created_at: any
 }
 
+const MotionSun = motion(Sun);
+const MotionMoon = motion(MoonStar);
+const MotionUser = motion(User);
+
 const DashboardPage = () => {
-
-
 
 
     const [Open, setOpen] = useState(false)
@@ -29,8 +32,6 @@ const DashboardPage = () => {
     const [previewOpen, setPreviewOpen] = useState(false);
 
     const account = useAccount()
-
-
 
 
     const docsRetrival = async () => {
@@ -42,8 +43,14 @@ const DashboardPage = () => {
             })
 
             const data = await retrivalData.json();
-            setRetrievedDocs(data.documents);
-            console.log("Retrival data:", data);
+            if (retrivalData.ok) {
+                setRetrievedDocs(data.documents);
+                console.log("Retrival data:", data);
+            } else {
+                toast.error(data.message || "Failed to fetch documents");
+            }
+
+            console.log("Data Inside DB:", data);
         } catch (err) {
             toast.error("Error fetching documents");
             console.error("Error fetching documents:", err);
@@ -60,7 +67,11 @@ const DashboardPage = () => {
         <div className="bg-black min-h-screen text-white" >
 
             {/* Navbar */}
-            <div className="flex justify-between items-center border-b border-white/15 h-14 px-8">
+            <motion.div className="flex justify-between items-center border-b border-white/15 h-14 px-8"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: "easeInOut" }}
+            >
                 <div className="flex items-center gap-2 font-semibold text-xl">
                     <img src={Logo} alt="logo" className="w-10 h-10" />
                     <i>DocuLEX</i>
@@ -70,22 +81,41 @@ const DashboardPage = () => {
                     <input
                         className="border border-white/30 border-dashed px-3 py-1 rounded-lg placeholder:text-sm placeholder:text-white/50 bg-transparent text-white focus:outline-none"
                         placeholder="Search..." />
-                    <Sun className="opacity-50 h-5 cursor-pointer active:scale-75 transition-all ease-in" />
-                    <MoonStar className="opacity-50 h-5 cursor-pointer active:scale-75 transition-all ease-in" />
+                    <MotionSun
+                        className="opacity-50 h-5 cursor-pointer"
+                        whileTap={{ scale: 0.7 }}
+                        whileHover={{ rotate: 180 }}
+                        transition={{ duration: 0.3 }}
+                    />
+
+                    <MotionMoon
+                        className="opacity-50 h-5 cursor-pointer"
+                        whileTap={{ scale: 0.7 }}
+                        whileHover={{ rotate: -180 }}
+                        transition={{ duration: 0.3 }}
+                    />
 
                     <span className="opacity-30">|</span>
 
-                    <User className="opacity-50 h-5 cursor-pointer" />
+                    <MotionUser
+                        className="opacity-50 h-5 cursor-pointer"
+                        whileHover={{ scale: 1.2 }}
+                        transition={{ duration: 0.3 }}
+                    />
 
                     <ConnectButton showBalance={false} chainStatus="icon" accountStatus={{
                         smallScreen: 'avatar',
                         largeScreen: 'full',
                     }} />
                 </div>
-            </div>
+            </motion.div>
 
             {/* Hero Section */}
-            <div className="flex flex-col items-center mt-24 gap-4 text-center px-4" >
+            <motion.div className="flex flex-col items-center mt-24 gap-4 text-center px-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: "easeInOut" }}
+            >
                 <h3 className="text-3xl font-bold">
                     Secure Your Legal Documents with <i>DocuLEX</i>
                 </h3>
@@ -97,10 +127,10 @@ const DashboardPage = () => {
                 </p>
 
                 {/* Upload Button */}
-                <button className=" text-amber-400  cursor-pointer" onClick={() => setOpen(true)}>
+                <button className=" text-amber-400  cursor-pointer hover:scale-110 transition-all ease-in" onClick={() => setOpen(true)}>
                     <span className="text-4xl">[</span> <span className="text-xl" >Upload Documents</span> <span className="text-4xl">]</span>
                 </button>
-            </div>
+            </motion.div>
 
             {/* Documents Section */}
             <div className="mt-20 px-10">
@@ -118,20 +148,20 @@ const DashboardPage = () => {
                 {/* Data Shown in Card Format */}
                 {gridOpen === "first" ? (
 
-                    <div className="grid grid-cols-3 gap-6">
+                    <div className="grid grid-cols-3 gap-6 ">
                         {retrivedDocs.map((doc, index) => (
-                            <div key={index}>
-                                <div className="border border-white/20 p-6 h-46 rounded-lg transition">
+                            <div key={index} className="">
+                                <div className="border border-white/20 p-6 h-46 rounded-lg transition  hover:border-amber-300 transation ease-in">
 
                                     <h4 className="font-semibold mb-2">
                                         {doc.filename}
                                     </h4>
 
-                                    <p className="text-sm text-white/60">
-                                        <p>
+                                    <div className="text-sm text-white/60">
+                                        <h3>
                                             {new Date(doc.created_at).toLocaleDateString()}
-                                        </p>
-                                    </p>
+                                        </h3>
+                                    </div>
 
                                     <div className="flex justify-between items-center mt-10">
 
@@ -141,17 +171,17 @@ const DashboardPage = () => {
 
                                         <div className="flex gap-3">
 
-                                            <button className="flex gap-2 rounded-md p-1 border border-amber-400 text-amber-400 active:scale-80 transition" onClick={() => setPreviewOpen(true)}>
+                                            <button className="flex gap-2 rounded-md p-1 border border-amber-400 text-amber-400 active:scale-80 transition cursor-pointer" onClick={() => setPreviewOpen(true)}>
                                                 <ScanEye />
                                                 Preview
                                             </button>
 
-                                            {previewOpen && (   
+                                            {previewOpen && (
                                                 <SkipTemplate onClose={() => setPreviewOpen(false)} />
                                             )}
 
 
-                                            <button className="flex gap-2 px-1 py-1 rounded-md border border-amber-400 text-amber-400 active:scale-80 transition font-semibold tracking-wide" >
+                                            <button className="flex gap-2 px-1 py-1 rounded-md border border-amber-400 text-amber-400 active:scale-80 transition font-semibold tracking-wide cursor-pointer" >
                                                 <Download />
                                                 Download
                                             </button>
@@ -164,13 +194,13 @@ const DashboardPage = () => {
                     </div>
                 ) : (
                     retrivedDocs.map((doc, index) => (
-                        <div key={index} className="border border-white/20 p-6 h-46 mb-6 rounded-lg  transition cursor-pointer">
+                        <div key={index} className="border border-white/20 p-6 h-46 mb-6 rounded-lg  transition cursor-pointer hover:border-amber-300 transation ease-in">
                             <div className="flex justify-between gap-2">
                                 <div className="flex flex-col">
                                     <h4 className="font-semibold mb-2">{doc.filename}</h4>
-                                    <p className="text-sm text-white/60"><p>
+                                    <p className="text-sm text-white/60">
                                         {new Date(doc.created_at).toLocaleDateString()}
-                                    </p></p>
+                                    </p>
                                 </div>
                                 <div>
                                     CID : {doc.cid}

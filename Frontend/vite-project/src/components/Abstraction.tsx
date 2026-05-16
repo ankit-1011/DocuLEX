@@ -1,10 +1,14 @@
+import { motion } from "framer-motion"
 
 
 const Abstraction = () => {
     return (
         <div className="min-h-screen bg-black p-24">
-            <h1 className="text-center text-gray-300 text-6xl font-semibold">Traditional Documents vs DocuLEX.
-                From Friction to Flow.</h1>
+            <motion.h1 className="text-center text-gray-300 text-6xl font-semibold" initial={{ y: 100, opacity: 0 }}  transition={{ duration: 0.6 }}
+            whileInView={{y:0,opacity:1}}>
+                Traditional Documents vs DocuLEX.
+                From Friction to Flow.
+            </motion.h1>
 
             <div className="flex justify-between mt-32 ml-24 mr-24">
                 <div className="gap-2 flex flex-col justify-center items-center ">
