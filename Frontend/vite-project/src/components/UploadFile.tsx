@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
+import { uploadDocument } from "../contract/contract";
 
 
 type UploadFileProps = {
@@ -67,7 +68,7 @@ const UploadFile = ({ onClose }: UploadFileProps) => {
                     wallet_address: account.address ?? null,
                 })
             });
-
+            await uploadDocument(cid, file.name);
             const metaDBResponse = await metaDB.json();
             console.log("Metadata DB response:", metaDBResponse);
             toast.success("File uploaded successfully in MetaDB!");

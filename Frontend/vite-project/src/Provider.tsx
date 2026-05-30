@@ -13,11 +13,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { http, WagmiProvider } from 'wagmi';
 
 import {
-    mainnet,
-    polygon,
-    arbitrum,
-    optimism,
-    base,
     sepolia,
 } from 'wagmi/chains';
 
@@ -43,7 +38,7 @@ export function Providers({
             <QueryClientProvider client={queryClient}>
                 <RainbowKitProvider coolMode showRecentTransactions={true}>
                     {children}
-                    <Toaster richColors position="top-right" />
+                    <Toaster richColors position="top-left" />
                 </RainbowKitProvider>
             </QueryClientProvider>
         </WagmiProvider>

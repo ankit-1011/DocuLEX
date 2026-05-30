@@ -6,32 +6,32 @@ const Know_More = () => {
         <div className="min-h-screen bg-white py-12">
             <motion.div className="text-6xl font-medium flex justify-center pt-20 px-11 text-center text-black max-w-6xl mx-auto" initial={{ y: 100, opacity: 0 }}
                 transition={{ duration: 0.8 }}
-                whileInView={{opacity: 1, y: 0}}
-                >
+                whileInView={{ opacity: 1, y: 0 }}
+            >
                 DocuLEX: The Future of Legal Documentation
             </motion.div>
 
             <motion.div className="text-4xl  pl-96 text-black p-12 m-8 ml-28" initial={{ y: 100, opacity: 0 }}
                 transition={{ duration: 0.8 }}
-                whileInView={{opacity: 1, y: 0}}
-                >
+                whileInView={{ opacity: 1, y: 0 }}
+            >
                 A next-generation high-code documentation and registration platform that leverages AI, Blockchain, Zero-Knowledge Proofs (ZK), and DAO governance to redefine how organizations and individuals manage legal and official documents.
             </motion.div>
 
             <div className=" gap-8 mx-32 ">
                 <motion.div className="flex justify-between text-8xl text-black font-semibold bg-yellow-500 text-center"
-                initial={{ y: 100, opacity: 0 }}
-                transition={{ duration: 0.8 }}
-                whileInView={{opacity: 1, y: 0}}
+                    initial={{ y: 100, opacity: 0 }}
+                    transition={{ duration: 0.8 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                 >
                     Register. Verify. Govern.
                 </motion.div>
                 <motion.div className="bg-[#F2F1F1] min-h-[19rem] w-full my-12 rounded-2xl py-4"
-                initial={{ y: 100, opacity: 0 }}
-                transition={{ duration: 0.8 }}
-                whileInView={{opacity: 1, y: 0}}
+                    initial={{ y: 100, opacity: 0 }}
+                    transition={{ duration: 0.8 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                 >
-                    <svg width="150" height="80"  viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="150" height="80" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                         <defs>
                             <pattern id="dotPattern" width="14" height="14" patternUnits="userSpaceOnUse">
                                 <circle cx="7" cy="7" r="2.2" fill="black" />
@@ -49,9 +49,9 @@ const Know_More = () => {
                     <p className="text-black text-xl px-4 py-4">Intelligent document extraction, validation, and analysis. Reduce manual work and human error.</p>
                 </motion.div>
                 <motion.div className="bg-[#F2F1F1] min-h-[19rem] w-full rounded-2xl py-4"
-                initial={{ y: 100, opacity: 0 }}
-                transition={{ duration: 0.8 }}
-                whileInView={{opacity: 1, y: 0}}
+                    initial={{ y: 100, opacity: 0 }}
+                    transition={{ duration: 0.8 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                 >
                     <svg width="150" height="80" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                         <g fill="none" stroke="black" stroke-width="3" stroke-linecap="round">
@@ -64,16 +64,16 @@ const Know_More = () => {
                             <ellipse cx="100" cy="152" rx="12" ry="6" />
                         </g>
                     </svg>
-                   <hr style={{ border: "1px solid white" }} />
+                    <hr style={{ border: "1px solid white" }} />
                     <p className="text-black text-3xl font-semibold py-8 px-4">ZK Privacy & Security</p>
                     <hr style={{ border: "1px solid white" }} />
                     <p className="text-black text-xl px-4 py-4">Zero-Knowledge Proofs verify authenticity without exposing sensitive data. Trust without disclosure.</p>
                 </motion.div>
 
                 <motion.div className="bg-[#F2F1F1] min-h-[19rem] w-full rounded-2xl my-12 py-4"
-                initial={{ y: 100, opacity: 0 }}
-                transition={{ duration: 0.8 }}
-                whileInView={{opacity: 1, y: 0}}
+                    initial={{ y: 100, opacity: 0 }}
+                    transition={{ duration: 0.8 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                 >
                     <svg width="150" height="80" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                         <g transform="translate(100 100)" stroke="black" stroke-width="4" stroke-linecap="round">

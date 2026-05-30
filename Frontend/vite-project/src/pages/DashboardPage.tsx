@@ -3,6 +3,7 @@ import Logo from "../assets/logo.png";
 import UploadFile from "../components/UploadFile";
 import Footer from "../components/Footer";
 import SkipTemplate from "../components/SkipTemplate";
+import { getDocs, docsDownload } from "../services/docs.service";
 import { useEffect, useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
@@ -31,37 +32,26 @@ const DashboardPage = () => {
     const [retrivedDocs, setRetrievedDocs] = useState<docsDataType[]>([]);
     const [previewOpen, setPreviewOpen] = useState(false);
 
-    const account = useAccount()
+    const { address } = useAccount()
 
 
     const docsRetrival = async () => {
-        try {
-            const retrivalData = await fetch(`http://localhost:3000/api/docs?wallet_address=${account.address}`, {
-                method: 'GET', headers: {
-                    authorization: `Bearer ${localStorage.getItem("token")}`
-                }
-            })
-
-            const data = await retrivalData.json();
-            if (retrivalData.ok) {
-                setRetrievedDocs(data.documents);
-                console.log("Retrival data:", data);
-            } else {
-                toast.error(data.message || "Failed to fetch documents");
-            }
-
-            console.log("Data Inside DB:", data);
-        } catch (err) {
-            toast.error("Error fetching documents");
-            console.error("Error fetching documents:", err);
-        }
+        const data = await getDocs({ address });
+        setRetrievedDocs(data);
     }
 
+    const downloadFile = async (
+        cid: string,
+        filename: string
+    ) => {
+        await docsDownload(cid, filename);
+    };
+
     useEffect(() => {
-        if (account.address) {
+        if (address) {
             docsRetrival();
         }
-    }, [account.address])
+    }, [address])
 
     return (
         <div className="bg-black min-h-screen text-white" >
@@ -149,7 +139,7 @@ const DashboardPage = () => {
                 {gridOpen === "first" ? (
 
                     <div className="grid grid-cols-3 gap-6 ">
-                        {retrivedDocs.map((doc, index) => (
+                        {Array.isArray(retrivedDocs) && retrivedDocs.map((doc, index) => (
                             <div key={index} className="">
                                 <div className="border border-white/20 p-6 h-46 rounded-lg transition  hover:border-amber-300 transation ease-in">
 
@@ -164,24 +154,24 @@ const DashboardPage = () => {
                                     </div>
 
                                     <div className="flex justify-between items-center mt-10">
-
                                         <p className="text-sm text-green-400 mt-2">
                                             Secured
                                         </p>
 
                                         <div className="flex gap-3">
-
                                             <button className="flex gap-2 rounded-md p-1 border border-amber-400 text-amber-400 active:scale-80 transition cursor-pointer" onClick={() => setPreviewOpen(true)}>
                                                 <ScanEye />
                                                 Preview
                                             </button>
 
                                             {previewOpen && (
-                                                <SkipTemplate onClose={() => setPreviewOpen(false)} />
+                                                <SkipTemplate onClose={() => setPreviewOpen(false)} cid={doc.cid} />
                                             )}
 
-
-                                            <button className="flex gap-2 px-1 py-1 rounded-md border border-amber-400 text-amber-400 active:scale-80 transition font-semibold tracking-wide cursor-pointer" >
+                                            <button className="flex gap-2 px-1 py-1 rounded-md border border-amber-400 text-amber-400 active:scale-80 transition font-semibold tracking-wide cursor-pointer" onClick={() =>
+                                                downloadFile(doc.cid, doc.filename)
+                                            }
+                                            >
                                                 <Download />
                                                 Download
                                             </button>
@@ -209,13 +199,18 @@ const DashboardPage = () => {
                             <div className="flex justify-between items-center mt-10">
                                 <p className="text-md text-green-400 mt-2">Secured</p>
                                 <div className="flex gap-3">
+
                                     <button className="flex gap-2 rounded-md p-2 border border-amber-400 text-amber-400 transition font-semibold tracking-wide mt-2 cursor-pointer active:scale-80" onClick={() => setPreviewOpen(true)}>
                                         <ScanEye />Preview
                                     </button>
+
                                     {previewOpen && (
-                                        <SkipTemplate onClose={() => setPreviewOpen(false)} />
+                                        <SkipTemplate onClose={() => setPreviewOpen(false)} cid={doc.cid} />
                                     )}
-                                    <button className="flex gap-2 p-2 rounded-md border border-amber-400 text-amber-400 transition font-semibold tracking-wide mt-2 cursor-pointer active:scale-80">
+                                    <button className="flex gap-2 p-2 rounded-md border border-amber-400 text-amber-400 transition font-semibold tracking-wide mt-2 cursor-pointer active:scale-80" onClick={() =>
+                                        downloadFile(doc.cid, doc.filename)
+                                    }
+                                    >
                                         <Download />Download
                                     </button>
                                 </div>
