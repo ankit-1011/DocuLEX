@@ -2,7 +2,7 @@
   "scripts": {
     "dev": "nodemon --exec ts-node server.ts",
     "build": "tsc",
-    "start": "node server.js"
+    "start": "node dist/server.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
@@ -13,7 +13,8 @@
     "form-data": "^4.0.5",
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.1.1",
-    "pg": "^8.18.0"
+    "pg": "^8.18.0",
+    "sarvamai": "^1.1.7"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",

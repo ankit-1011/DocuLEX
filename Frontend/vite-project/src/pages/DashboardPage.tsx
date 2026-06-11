@@ -1,14 +1,15 @@
-import { Download, LayoutGrid, Logs, MoonStar, ScanEye, Sun, User } from "lucide-react";
+import { Download, LayoutGrid, Logs, MoonStar, ScanEye, Sun, User, LogOut, ChevronRight, Copy, Check } from "lucide-react";
 import Logo from "../assets/logo.png";
 import UploadFile from "../components/UploadFile";
 import Footer from "../components/Footer";
 import SkipTemplate from "../components/SkipTemplate";
 import { getDocs, docsDownload } from "../services/docs.service";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -24,6 +25,7 @@ const MotionSun = motion(Sun);
 const MotionMoon = motion(MoonStar);
 const MotionUser = motion(User);
 
+
 const DashboardPage = () => {
 
 
@@ -31,8 +33,11 @@ const DashboardPage = () => {
     const [gridOpen, setGrid] = useState("first")
     const [retrivedDocs, setRetrievedDocs] = useState<docsDataType[]>([]);
     const [previewOpen, setPreviewOpen] = useState(false);
+    const [logoutOpen, setLogoutOpen] = useState(false);
 
     const { address } = useAccount()
+    const dropdownRef = useRef(null);
+    const navigate = useNavigate();
 
 
     const docsRetrival = async () => {
@@ -53,8 +58,36 @@ const DashboardPage = () => {
         }
     }, [address])
 
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            navigate("/");
+        }
+    })
+
+    const logoutStorage = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("email");
+        toast.success("Logged out successfully!");
+        navigate("/");
+    }
+
+
+
+    const [copiedCid, setCopiedCid] = useState("");
+
+    const copyText = async (cid: string) => {
+        await navigator.clipboard.writeText(cid);
+        setCopiedCid(cid);
+
+        setTimeout(() => {
+            setCopiedCid("");
+        }, 2000);
+    };
+
+
     return (
-        <div className="bg-black min-h-screen text-white" >
+        <div className="bg-black min-h-screen text-white" ref={dropdownRef} >
 
             {/* Navbar */}
             <motion.div className="flex justify-between items-center border-b border-white/15 h-14 px-8"
@@ -67,10 +100,7 @@ const DashboardPage = () => {
                     <i>DocuLEX</i>
                 </div>
 
-                <div className="flex items-center gap-5">
-                    <input
-                        className="border border-white/30 border-dashed px-3 py-1 rounded-lg placeholder:text-sm placeholder:text-white/50 bg-transparent text-white focus:outline-none"
-                        placeholder="Search..." />
+                <div className="flex items-center gap-5 required:">
                     <MotionSun
                         className="opacity-50 h-5 cursor-pointer"
                         whileTap={{ scale: 0.7 }}
@@ -87,11 +117,39 @@ const DashboardPage = () => {
 
                     <span className="opacity-30">|</span>
 
+
                     <MotionUser
                         className="opacity-50 h-5 cursor-pointer"
                         whileHover={{ scale: 1.2 }}
                         transition={{ duration: 0.3 }}
+                        onClick={() => setLogoutOpen(!logoutOpen)}
                     />
+                    {logoutOpen === true ? (
+                        <div className="absolute right-24 top-15 z-50 w-48 overflow-hidden rounded-xl border border-white/10 bg-zinc-900/95 backdrop-blur-md shadow-2xl">
+                            <ul className="py-2">
+
+                                <li className="flex items-center justify-between px-4 py-3 text-sm text-white cursor-pointer hover:bg-white/10 transition-all">
+                                    <div className="flex items-center gap-3">
+                                        <User size={16} />
+                                        <span>Profile</span>
+                                    </div>
+                                    <ChevronRight size={14} className="opacity-50" />
+                                </li>
+
+                                <div className="mx-3 border-t border-white/10"></div>
+
+                                <li
+                                    className="flex items-center gap-3 px-4 py-3 text-sm text-red-400 cursor-pointer hover:bg-red-500/10 hover:text-red-300 transition-all"
+                                    onClick={logoutStorage}
+                                >
+                                    <LogOut size={16} />
+                                    <span>Logout</span>
+                                </li>
+
+                            </ul>
+                        </div>
+                    ) :
+                        ""}
 
                     <ConnectButton showBalance={false} chainStatus="icon" accountStatus={{
                         smallScreen: 'avatar',
@@ -192,8 +250,27 @@ const DashboardPage = () => {
                                         {new Date(doc.created_at).toLocaleDateString()}
                                     </p>
                                 </div>
-                                <div>
-                                    CID : {doc.cid}
+                                <div
+                                    onClick={() => copyText(doc.cid)}
+                                    className="relative flex items-center gap-2 cursor-pointer group text-white/70 hover:text-amber-400 transition"
+                                >
+                                    <span>CID : {doc.cid}</span>
+
+                                    {copiedCid === doc.cid ? (
+                                        <Check size={16} className="text-green-400" />
+                                    ) : (
+                                        <Copy size={16} />
+                                    )}
+
+                                    <span
+                                        className="absolute -top-8 left-1/2 -translate-x-1/2
+               opacity-0 group-hover:opacity-100
+               transition-all duration-200
+               bg-zinc-900 text-white text-xs
+               px-2 py-1 rounded-md whitespace-nowrap"
+                                    >
+                                        {copiedCid === doc.cid ? "Copied!" : "Click to copy"}
+                                    </span>
                                 </div>
                             </div>
                             <div className="flex justify-between items-center mt-10">
