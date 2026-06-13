@@ -5,12 +5,6 @@ contract.ts mein uploadDocument hai, lekin upload ke baad blockchain par registe
 AI document summarization (Sarvam)
 SkipTemplate mein "Summarise" button ab dummy hai. PDF/text extract karke sarvam.ts se summary API banao — yeh landing page ke "AI-powered insights" claim se match karega.
 
-Upload ke baad list auto-refresh
-Ab upload ke baad dashboard dubara fetch nahi karta. UploadFile se onUploaded callback se cards turant update ho sakte hain.
-
-Logout + session handling
-Token/email clear karo, expired JWT par auto redirect /auth, proper logout button navbar mein.
-
 Search actually kaam kare
 Dashboard par search input hai par filter logic nahi. Filename / CID / date se filter add karo.
 
@@ -34,24 +28,8 @@ UX improvements
 In-app PDF preview
 Ab preview naya tab kholta hai. Modal ke andar PDF viewer (react-pdf) better UX dega.
 
-Dark / light mode
-Sun/Moon icons hain par toggle logic nahi. Theme switch + localStorage.
-
-Empty & loading states
-"No documents", skeleton loaders, wallet connect na ho to clear message.
-
-Toast errors improve karo
-Backend se exact message dikhao (User not found, Document already stored, etc.).
-
-Document delete
-DELETE /api/docs/:cid — DB se hatao (IPFS immutable rehta hai, yeh clear karo UI mein).
-
 Rename / tags / categories
 Legal docs ke liye: Contract, Affidavit, Court Order, etc.
-
-Blockchain & Web3 (landing page ke claims)
-On-chain document list read karo
-Contract ka getDocuments() wagmi/ethers se dashboard par "Blockchain verified" badge ke saath dikhao.
 
 Transaction history panel
 Har document ke liye: Pinata CID, DB save time, blockchain tx hash, block timestamp.
@@ -75,10 +53,6 @@ Q&A on document
 OCR for scanned PDFs/images
 Scanned documents se text nikal kar search/summary enable karo.
 
-Advanced (portfolio / hackathon level)
-Zero-Knowledge proof verification
-Landing par ZK mention hai — prove karo "document valid hai" bina poori file reveal kiye (zkSNARK library).
-
 DAO governance module
 Community document registry approve/reject — governance token + voting.
 
@@ -93,10 +67,6 @@ Upload success, share link, verification alert.
 
 Admin dashboard
 Total users, documents, storage stats, flagged docs.
-
-Code quality & production
-Env-based API URL
-localhost:3000 hardcoded hai — .env se VITE_API_URL.
 
 Backend validation (Zod/Joi)
 Request body validate karo signup/upload/docs par.

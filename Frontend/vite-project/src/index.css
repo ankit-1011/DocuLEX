@@ -20,3 +20,13 @@
   animation: marquee 20s linear infinite;
   will-change: transform;
 }
+
+.light {
+  background: white;
+  color: black;
+}
+
+.dark {
+  background: #000000;
+
+}

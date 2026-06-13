@@ -34,11 +34,10 @@ const AuthPage = () => {
             })
 
             const data = await res.json();
-            // console.log(data);
-            // console.log(res);
+
             if (!res.ok) {
-                // throw new Error(res.statusText);
                 toast.error(data.message || "An error occurred");
+                return;
             }
 
             if (state === "login") {
@@ -47,8 +46,8 @@ const AuthPage = () => {
                 toast.success("Login successful");
                 navigate("/dashboard");
             } else {
-                toast.error("Invalid Credentials");
-                navigate("/auth");
+                toast.success("Registration successful. Please login.");
+                setState("login");
             }
 
         } catch (error) {
