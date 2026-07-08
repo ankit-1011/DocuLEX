@@ -22,7 +22,23 @@ const UploadFile = ({ onClose, onUploaded }: UploadFileProps) => {
     const handleUpload = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData();
-        if (!file) return;
+
+        if (!file) {
+            alert("Please select a file.");
+            return;
+        }
+
+        const allowedTypes = [
+            "application/pdf",
+            "image/jpeg",
+            "image/png",
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+            alert("Only PDF, JPG/JPEG or PNG files are allowed.");
+            return;
+        }
+
         if (!email) {
             toast.error("Please log in again — session email is missing.");
             return;
@@ -154,7 +170,7 @@ const UploadFile = ({ onClose, onUploaded }: UploadFileProps) => {
             ) :
 
                 (
-                   <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                         <div className="relative w-full max-w-[440px] rounded-md border border-white/30 bg-black p-8 shadow-2xl">
                             <button
                                 type="button"
@@ -192,6 +208,7 @@ const UploadFile = ({ onClose, onUploaded }: UploadFileProps) => {
                                         type="file"
                                         className="w-full mt-1 p-2 rounded bg-zinc-800/80 text-white outline-none cursor-pointer file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:bg-white file:text-black hover:file:bg-white/90"
                                         onChange={(e) => setFile(e.target.files?.[0] || null)}
+                                        accept=".pdf,.jpg,.jpeg,.png"
                                     />
                                 </div>
 

@@ -2,9 +2,6 @@ High impact (pehle yeh karo)
 Smart contract upload flow complete karo
 contract.ts mein uploadDocument hai, lekin upload ke baad blockchain par register nahi ho raha. Upload success ke baad CID + filename chain par likho aur tx hash UI par dikhao.
 
-AI document summarization (Sarvam)
-SkipTemplate mein "Summarise" button ab dummy hai. PDF/text extract karke sarvam.ts se summary API banao — yeh landing page ke "AI-powered insights" claim se match karega.
-
 Search actually kaam kare
 Dashboard par search input hai par filter logic nahi. Filename / CID / date se filter add karo.
 
@@ -21,24 +18,39 @@ Upload par file ka cryptographic hash DB + chain par save karo. Baad mein "tampe
 Digital signature / wallet sign message
 Upload se pehle user apne wallet se message sign kare — proof ki file usi ne upload ki.
 
-Share link with expiry
-Time-limited shareable link (e.g. 24 hours) taaki lawyer/client ko document bhej sako bina full account ke.
+Rename / tags / categories
+Legal docs ke liye: Contract, Affidavit, Court Order, etc
+
+Role-based access
+Admin, Lawyer, Client roles — alag permissions.
+
+Admin dashboard
+Total users, documents, storage stats, flagged docs.
+
+Backend validation (Zod/Joi)
+Request body validate karo signup/upload/docs par
+
+Tests
+Auth, upload, docs API ke liye unit + integration tests
+-----------------------------------------------------------
+Pagination
+Documents zyada hone par GET /api/docs?page=1&limit=10.
 
 UX improvements
 In-app PDF preview
 Ab preview naya tab kholta hai. Modal ke andar PDF viewer (react-pdf) better UX dega.
 
-Rename / tags / categories
-Legal docs ke liye: Contract, Affidavit, Court Order, etc.
+Share link with expiry
+Time-limited shareable link (e.g. 24 hours) taaki lawyer/client ko document bhej sako bina full account ke.
 
-Transaction history panel
-Har document ke liye: Pinata CID, DB save time, blockchain tx hash, block timestamp.
 
-Multi-chain support
-Ab ek hardcoded contract address hai. Testnet/mainnet switch + env-based config.
 
-NFT-style proof (optional)
-Har document ka ownership proof ERC-721 token — advanced, demo ke liye strong.
+
+
+
+
+AI document summarization (Sarvam)
+SkipTemplate mein "Summarise" button ab dummy hai. PDF/text extract karke sarvam.ts se summary API banao — yeh landing page ke "AI-powered insights" claim se match karega
 
 AI features (Sarvam integrate karke)
 Key clause extraction
@@ -48,34 +60,7 @@ Multi-language summary
 Hindi + English summary — Indian legal docs ke liye useful.
 
 Q&A on document
-"Is agreement mein notice period kya hai?" — RAG style chat over uploaded PDF.
+"Is agreement mein notice period kya hai?" — RAG style chat over uploaded PDF
 
 OCR for scanned PDFs/images
 Scanned documents se text nikal kar search/summary enable karo.
-
-DAO governance module
-Community document registry approve/reject — governance token + voting.
-
-Audit trail / activity log
-Kaun ne kab upload/download/preview kiya — compliance ke liye.
-
-Role-based access
-Admin, Lawyer, Client roles — alag permissions.
-
-Email notifications
-Upload success, share link, verification alert.
-
-Admin dashboard
-Total users, documents, storage stats, flagged docs.
-
-Backend validation (Zod/Joi)
-Request body validate karo signup/upload/docs par.
-
-Pagination
-Documents zyada hone par GET /api/docs?page=1&limit=10.
-
-File type & size limits
-Sirf PDF/DOCX, max 10MB — security.
-
-Tests
-Auth, upload, docs API ke liye unit + integration tests.

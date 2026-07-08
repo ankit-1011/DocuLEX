@@ -1,4 +1,5 @@
 import { Cross, Maximize } from 'lucide-react'
+import { Document, Page } from "react-pdf";
 
 
 type SkipTemplateProps = {
