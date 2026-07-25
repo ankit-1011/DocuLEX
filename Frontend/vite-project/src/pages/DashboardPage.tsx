@@ -34,6 +34,8 @@ interface DocsDataType {
     created_at: string | null;
 }
 
+const PAGE_SIZE = 6;
+
 function shortCid(cid: string) {
     if (cid.length <= 18) return cid;
     return `${cid.slice(0, 10)}…${cid.slice(-8)}`;
@@ -48,7 +50,10 @@ const DashboardPage = () => {
     const [open, setOpen] = useState(false);
     const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
     const [retrievedDocs, setRetrievedDocs] = useState<DocsDataType[]>([]);
-    const [previewCid, setPreviewCid] = useState<string | null>(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalDocs, setTotalDocs] = useState(0);
+    const [totalPages, setTotalPages] = useState(1);
+    const [previewDoc, setPreviewDoc] = useState<{ cid: string; filename: string; filetype: string } | null>(null);
     const [logoutOpen, setLogoutOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [copiedCid, setCopiedCid] = useState("");
@@ -57,26 +62,43 @@ const DashboardPage = () => {
     const dropdownRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
 
-    const docsRetrieval = useCallback(async () => {
+    const docsRetrieval = useCallback(async (page = 1) => {
         if (!address) {
             setRetrievedDocs([]);
+            setTotalDocs(0);
+            setTotalPages(1);
+            setCurrentPage(1);
             return;
         }
+
         setLoading(true);
         try {
-            const data = await getDocs({ address });
-            setRetrievedDocs(Array.isArray(data) ? data : []);
+            const data = await getDocs({
+                address,
+                page,
+                limit: PAGE_SIZE,
+            });
+
+            setRetrievedDocs(data.documents);
+            setTotalDocs(data.total);
+            setTotalPages(data.totalPages);
+            setCurrentPage(data.page);
         } finally {
             setLoading(false);
         }
     }, [address]);
+
+    const goToPage = (page: number) => {
+        if (page < 1 || page > totalPages) return;
+        docsRetrieval(page);
+    };
 
     const downloadFile = async (cid: string, filename: string) => {
         await docsDownload(cid, filename);
     };
 
     useEffect(() => {
-        if (address) docsRetrieval();
+        if (address) docsRetrieval(1);
     }, [address, docsRetrieval]);
 
     useEffect(() => {
@@ -93,10 +115,6 @@ const DashboardPage = () => {
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
-
-    useEffect(() => {
-        docsRetrieval();
-    }, [])
 
     const logoutStorage = () => {
         localStorage.removeItem("token");
@@ -115,8 +133,8 @@ const DashboardPage = () => {
     const userEmail = localStorage.getItem("email");
 
     const stats = [
-        { label: "Total documents", value: retrievedDocs.length, icon: FileText },
-        { label: "On IPFS", value: retrievedDocs.length, icon: Shield },
+        { label: "Total documents", value: totalDocs, icon: FileText },
+        { label: "On IPFS", value: totalDocs, icon: Shield },
         { label: "Wallet", value: isConnected ? shortAddress(address!) : "Not connected", icon: Wallet },
     ];
 
@@ -124,7 +142,7 @@ const DashboardPage = () => {
         <div className={`flex ${compact ? "gap-2" : "gap-2.5"} shrink-0`}>
             <button
                 type="button"
-                onClick={() => setPreviewCid(doc.cid)}
+                onClick={() => setPreviewDoc({ cid: doc.cid, filename: doc.filename, filetype: doc.filetype })}
                 className="inline-flex items-center gap-1.5 rounded-lg border border-amber-400/40 bg-amber-400/5 px-3 py-1.5 text-xs font-medium text-amber-300 transition hover:border-amber-400 hover:bg-amber-400/15 active:scale-95"
             >
                 <ScanEye className="h-3.5 w-3.5" />
@@ -479,6 +497,35 @@ const DashboardPage = () => {
                             ))}
                         </div>
                     )}
+
+                    {/* Pagination - backend se data aata hai */}
+                    {isConnected && !loading && totalDocs > PAGE_SIZE && (
+                        <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
+                            <p className="text-sm text-white/45">
+                                Page {currentPage} of {totalPages} ({totalDocs} documents)
+                            </p>
+
+                            <div className="flex gap-2">
+                                <button
+                                    type="button"
+                                    disabled={currentPage === 1}
+                                    onClick={() => goToPage(currentPage - 1)}
+                                    className="rounded-lg border border-white/10 px-4 py-2 text-sm disabled:opacity-40"
+                                >
+                                    Previous
+                                </button>
+
+                                <button
+                                    type="button"
+                                    disabled={currentPage === totalPages}
+                                    onClick={() => goToPage(currentPage + 1)}
+                                    className="rounded-lg border border-white/10 px-4 py-2 text-sm disabled:opacity-40"
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </section>
 
                 <div className="mt-20">
@@ -489,12 +536,17 @@ const DashboardPage = () => {
             {open && (
                 <UploadFile
                     onClose={() => setOpen(false)}
-                    onUploaded={docsRetrieval}
+                    onUploaded={() => docsRetrieval(1)}
                 />
             )}
 
-            {previewCid && (
-                <SkipTemplate onClose={() => setPreviewCid(null)} cid={previewCid} />
+            {previewDoc && (
+                <SkipTemplate
+                    onClose={() => setPreviewDoc(null)}
+                    cid={previewDoc.cid}
+                    filename={previewDoc.filename}
+                    filetype={previewDoc.filetype}
+                />
             )}
         </div>
     );
